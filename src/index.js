@@ -1,14 +1,25 @@
-const express = require('express');
-const dotenv = require('dotenv');
+const express = require('express')
+const dotenv = require('dotenv')
+const mongoose = require('mongoose')
+const routes = require('./routes')
+const bodyParser = require('body-parser')
+dotenv.config()
 
-dotenv.config();
-const port = process.env.PORT || 3001; // Default port is 3000 if PORT is not specified in .env
-const app = express();
+const app = express()
+const port = process.env.PORT
+app.use(bodyParser.json());
 
-app.get('/', (req, res) => {
-    res.send('hello worldasdasd');
-});
+routes(app);
 
-app.listen(port, () => {
-    console.log('Server is listening on port', port);
-});
+mongoose.connect(`${process.env.MONGO_DB}`)
+.then(() => {
+    console.log('connect DB success')
+})
+.catch((e) => {
+    console.log(e)
+})
+
+
+app.listen(port, () =>{
+    console.log('connecting with port '+ port)
+})
