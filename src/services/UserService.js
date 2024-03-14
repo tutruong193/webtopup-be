@@ -1,4 +1,5 @@
 const User = require('../models/UserModel');
+const { generalAccessToken } = require("./JWTService");
 const createUser = (data) => {
     return new Promise(async (resolve, reject) => {
         const { name, email, password, role } = data;
@@ -47,9 +48,14 @@ const loginUser = (data) => {
                     message: 'Password not true'
                 })
             }
+            const access_token = await generalAccessToken({
+                id: checkEmail.id,
+                role: checkEmail.role,
+            })
             resolve({
                 status: 'OK',
                 message: 'SUCCESS',
+                access_token: access_token
             })
         } catch (e) {
             reject(e)
@@ -127,5 +133,5 @@ module.exports = {
     detailUser,
     getAllUser,
     updateUser,
-    deleteUser
+    deleteUser,
 }
