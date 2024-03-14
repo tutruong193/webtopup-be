@@ -94,9 +94,38 @@ const getAllUser = async () => {
     }
 })};
 
+const updateUser = async (id,data) => {
+    return new Promise(async (resolve, reject) => {
+    try {
+        const updateUser = await User.findByIdAndUpdate(id,data);
+        resolve({
+            status: 'OK',
+            message: 'SUCCESS',
+            data: updateUser
+        })
+    } catch (error) {
+        throw error;
+    }
+})};
+
+const deleteUser = async (id) => {
+    return new Promise(async (resolve, reject) => {
+    try {
+        await User.findByIdAndDelete(id);
+        resolve({
+            status: 'OK',
+            message: 'SUCCESS',
+        })
+    } catch (error) {
+        throw error;
+    }
+})};
+
 module.exports = {
     createUser,
     loginUser,
     detailUser,
-    getAllUser
+    getAllUser,
+    updateUser,
+    deleteUser
 }
