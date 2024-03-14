@@ -57,7 +57,23 @@ const loginUser = (data) => {
     })
 }
 
+const getUserById = async (userId) => {
+    try {
+        const user = await User.findById(userId);
+        if (user === null) {
+            resolve({
+                status: 'ERR',
+                message: 'The user is not defined'
+            })
+        }
+        return user
+    } catch (error) {
+        throw error;
+    }
+};
+
 module.exports = {
     createUser,
-    loginUser
+    loginUser,
+    getUserById
 }
