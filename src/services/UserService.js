@@ -57,23 +57,46 @@ const loginUser = (data) => {
     })
 }
 
-const getUserById = async (userId) => {
-    try {
-        const user = await User.findById(userId);
-        if (user === null) {
-            resolve({
-                status: 'ERR',
-                message: 'The user is not defined'
+const detailUser = async (id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const user = await User.findOne({
+                _id: id
             })
+            if (user === null) {
+                resolve({
+                    status: 'ERR',
+                    message: 'The user is not defined'
+                })
+            }
+            resolve({
+                status: 'OK',
+                message: 'SUCESS',
+                data: user
+            })
+        } catch (e) {
+            reject(e)
         }
-        return user
+    })
+}
+
+const getAllUser = async () => {
+    return new Promise(async (resolve, reject) => {
+    try {
+        const data = await User.find()
+        resolve({
+            status: 'OK',
+            message: 'SUCCESS',
+            data: data
+        })
     } catch (error) {
         throw error;
     }
-};
+})};
 
 module.exports = {
     createUser,
     loginUser,
-    getUserById
+    detailUser,
+    getAllUser
 }

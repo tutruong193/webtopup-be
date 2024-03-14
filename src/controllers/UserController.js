@@ -53,19 +53,26 @@ const loginUser = async (req, res) => {
 
 const detailUser = async (req, res) => {
     try {
-        const userId = req.params.id;
-        const user = await UserService.getUserById(userId);
-        if (!user) {
-            return res.status(404).json({
+        const id = req.params.id
+        if (!id) {
+            return res.status(200).json({
                 status: 'ERR',
-                message: 'User not found.'
-            });
+                message: 'The userId is required'
+            })
         }
-    
-        return res.status(200).json({
-            status: 'OK',
-            data: user
-        });
+        const response = await UserService.detailUser(id)
+        return res.status(200).json(response)
+    } catch (e) {
+        return res.status(404).json({
+            message: e
+        })
+    }
+}
+
+const getAllUser = async (req, res) => {
+    try {
+        const response = await UserService.getAllUser()
+        return res.status(200).json(response)
     } catch (e) {
         return res.status(404).json({
             message: e
@@ -75,9 +82,9 @@ const detailUser = async (req, res) => {
 
 
 
-
 module.exports = {
     createUser,
     loginUser,
-    detailUser
+    detailUser,
+    getAllUser
 }
