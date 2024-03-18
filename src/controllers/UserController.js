@@ -1,12 +1,11 @@
 const UserService = require('../services/UserService');
 
 const createUser = async (req, res) => {
-    console.log('Create', req.body.faculty)
     try {
         const { name, email, password, role, faculty } = req.body
         const reg = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
         const isCheckEmail = reg.test(email)
-        if (!email || !password || !name || !role || !faculty) {
+        if (!email || !password || !name || !role) {
             // || !faculty
             return res.status(200).json({
                 status: 'ERR',
@@ -25,7 +24,7 @@ const createUser = async (req, res) => {
         console.log(e)
         return res.status(404).json({
             message: e
-           
+
         })
     }
 }
