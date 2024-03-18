@@ -2,7 +2,7 @@ const User = require('../models/UserModel');
 const { generalAccessToken } = require("./JWTService");
 const createUser = (data) => {
     return new Promise(async (resolve, reject) => {
-        const { name, email, password, role } = data;
+        const { name, email, password, role, faculty } = data;
         try {
             const checkEmail = await User.findOne({ email: email })
             if (checkEmail !== null) {
@@ -15,7 +15,8 @@ const createUser = (data) => {
                     name,
                     email,
                     password,
-                    role
+                    role,
+                    faculty,
                 })
                 if (createdUser) {
                     resolve({
