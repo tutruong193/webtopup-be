@@ -35,22 +35,23 @@ const loginUser = (data) => {
     return new Promise(async (resolve, reject) => {
         const { email, password } = data;
         try {
-            const checkEmail = await User.findOne({ email: email })
-            if (checkEmail == null) {
+            const checkUser = await User.findOne({ email: email })
+            if (checkUser == null) {
                 resolve({
                     status: 'ERR',
-                    message: 'Email not found'
+                    message: 'The user is not defined',
                 })
             }
-            if (checkEmail.password !== password) {
+
+            if (password !== checkUser.password) {
                 resolve({
                     status: 'ERR',
-                    message: 'Password not true'
+                    message: 'The password or username is not correct'
                 })
             }
             const access_token = await generalAccessToken({
-                id: checkEmail.id,
-                role: checkEmail.role,
+                id: checkUser.id,
+                role: checkUser.role,
             })
             resolve({
                 status: 'OK',
@@ -88,44 +89,47 @@ const detailUser = async (id) => {
 
 const getAllUser = async () => {
     return new Promise(async (resolve, reject) => {
-    try {
-        const data = await User.find()
-        resolve({
-            status: 'OK',
-            message: 'SUCCESS',
-            data: data
-        })
-    } catch (error) {
-        throw error;
-    }
-})};
+        try {
+            const data = await User.find()
+            resolve({
+                status: 'OK',
+                message: 'SUCCESS',
+                data: data
+            })
+        } catch (error) {
+            throw error;
+        }
+    })
+};
 
-const updateUser = async (id,data) => {
+const updateUser = async (id, data) => {
     return new Promise(async (resolve, reject) => {
-    try {
-        const updateUser = await User.findByIdAndUpdate(id,data);
-        resolve({
-            status: 'OK',
-            message: 'SUCCESS',
-            data: updateUser
-        })
-    } catch (error) {
-        throw error;
-    }
-})};
+        try {
+            const updateUser = await User.findByIdAndUpdate(id, data);
+            resolve({
+                status: 'OK',
+                message: 'SUCCESS',
+                data: updateUser
+            })
+        } catch (error) {
+            throw error;
+        }
+    })
+};
 
 const deleteUser = async (id) => {
     return new Promise(async (resolve, reject) => {
-    try {
-        await User.findByIdAndDelete(id);
-        resolve({
-            status: 'OK',
-            message: 'SUCCESS',
-        })
-    } catch (error) {
-        throw error;
-    }
-})};
+        try {
+            await User.findByIdAndDelete(id);
+            resolve({
+                status: 'OK',
+                message: 'SUCCESS',
+            })
+        } catch (error) {
+            throw error;
+        }
+    })
+};
 
 module.exports = {
     createUser,
