@@ -45,8 +45,19 @@ const getAllFaculty = async (req, res) => {
         });
     }
 };
+const getNameFaculty = async (req, res) => {
+    try {
+        const response = await FacultyService.getNameFaculty(req.params.id);
+        return res.status(200).json(response);
+    } catch (e) {
+        return res.status(404).json({
+            message: e.message // Trả về thông báo lỗi cụ thể
+        });
+    }
+};
 module.exports = {
     createFaculty,
     deleteFaculty,
-    getAllFaculty
+    getAllFaculty,
+    getNameFaculty
 }

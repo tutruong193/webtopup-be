@@ -22,7 +22,7 @@ const createFaculty = (newFaculty) => {
         }
     })
 }
-const getFacultyName = async (facultyId) => {
+const getNameFaculty = async (facultyId) => {
     try {
         const faculty = await Faculty.findById(facultyId);
         if (!faculty) {
@@ -65,7 +65,7 @@ const deleteFaculty = (id) => {
 };
 module.exports = {
     createFaculty,
-    getFacultyName,
+    getNameFaculty,
     deleteFaculty,
     getAllFaculty
 }
