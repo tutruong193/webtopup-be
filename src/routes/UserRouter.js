@@ -5,8 +5,8 @@ const { authAdminMiddleWare, authStudentMiddleWare } = require('../middleware/au
 router.post('/logout', UserController.logoutUser)
 router.post('/create', UserController.createUser);
 router.post('/login', UserController.loginUser);
-router.get('/detail/:id', authStudentMiddleWare, UserController.detailUser);
+router.get('/detail/:id', authAdminMiddleWare, UserController.detailUser);
 router.get('/getall', UserController.getAllUser);
 router.put('/update/:id', UserController.updateUser);
-router.delete('/delete/:id', UserController.deleteUser);
+router.delete('/delete/:id',authAdminMiddleWare, UserController.deleteUser);
 module.exports = router
