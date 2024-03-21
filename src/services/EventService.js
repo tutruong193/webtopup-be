@@ -63,8 +63,8 @@ const getValidEvents = async () => {
 const updateEvent = (id, data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const checkEvent = await Event.findOne({ name: data.name })
-            if (checkEvent !== null) {
+            const checkEvent = await Event.find({ name: data.name })
+            if (checkEvent.length > 1) {
                 resolve({
                     status: 'ERR',
                     message: 'The name is used'
@@ -95,11 +95,34 @@ const deleteEvent = async (id) => {
         }
     })
 };
+const detailEvent = async (id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const event = await Event.findOne({
+                _id: id
+            })
+            if (event === null) {
+                resolve({
+                    status: 'ERR',
+                    message: 'The event is not defined'
+                })
+            }
+            resolve({
+                status: 'OK',
+                message: 'SUCESS',
+                data: event
+            })
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
 
 module.exports = {
     createEvent,
     getAllEvents,
     getValidEvents,
     updateEvent,
-    deleteEvent
+    deleteEvent,
+    detailEvent
 };

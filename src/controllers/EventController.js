@@ -114,10 +114,29 @@ const deleteEvent = async (req, res) => {
         })
     }
 }
+const detailEvent = async (req, res) => {
+    try {
+        const id = req.params.id
+        if (!id) {
+            return res.status(200).json({
+                status: 'ERR',
+                message: 'The eventId is required'
+            })
+        }
+        const response = await EventService.detailEvent(id)
+        return res.status(200).json(response)
+    } catch (e) {
+        return res.status(404).json({
+            message: e
+        })
+    }
+}
+
 module.exports = {
     createEvent,
     getAllEvents,
     getValidEvents,
     updateEvent,
-    deleteEvent
+    deleteEvent,
+    detailEvent
 };

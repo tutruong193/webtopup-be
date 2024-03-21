@@ -53,6 +53,7 @@ const loginUser = (data) => {
             const access_token = await generalAccessToken({
                 id: checkUser.id,
                 role: checkUser.role,
+                faculty: checkUser.faculty
             })
             resolve({
                 status: 'OK',
