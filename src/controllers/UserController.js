@@ -74,7 +74,8 @@ const detailUser = async (req, res) => {
 
 const getAllUser = async (req, res) => {
     try {
-        const response = await UserService.getAllUser()
+        const  {limit, page}  = req.body
+        const response = await UserService.getAllUser(limit,page)
         return res.status(200).json(response)
     } catch (e) {
         return res.status(404).json({

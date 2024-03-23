@@ -8,12 +8,12 @@ const multer = require("multer");
 dotenv.config()
 
 const app = express()
-const port = process.env.PORT
+const port = process.env.PORT  || 3001
 app.use(bodyParser.json());
 app.use(cors());
 routes(app);
 
-mongoose.connect(`${process.env.MONGO_DB}`)
+mongoose.connect(`mongodb+srv://lmh:hoanghoang@cluster0.n1s6tcc.mongodb.net/be`)
     .then(() => {
         console.log('connect DB success')
     })
