@@ -5,25 +5,27 @@ const routes = require('./routes')
 const cors = require('cors');
 const bodyParser = require('body-parser')
 const multer = require("multer");
+const EventService = require('./services/EventService')
+const FacultyService = require('./services/FacultyService')
+const UserService = require('./services/UserService')
+const fs = require('fs');
 dotenv.config()
 
 const app = express()
-const port = process.env.PORT  || 3001
+const port = process.env.PORT || 3001
 app.use(bodyParser.json());
 app.use(cors());
 routes(app);
-
-mongoose.connect(`mongodb+srv://lmh:hoanghoang@cluster0.n1s6tcc.mongodb.net/be`)
-    .then(() => {
-        console.log('connect DB success')
-    })
-    .catch((e) => {
-        console.log(e)
-    })
-
-
+mongoose.connect(`${process.env.MONGO_DB}`)
+  .then(() => {
+    console.log('connect DB success')
+  })
+  .catch((e) => {
+    console.log(e)
+  })
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
+  destination: async function (req, file, cb) {
+
     cb(null, "./files");
   },
   filename: function (req, file, cb) {
@@ -32,19 +34,16 @@ const storage = multer.diskStorage({
   },
 });
 const upload = multer({ storage: storage });
-
 app.post("/upload-files", upload.single("file"), async (req, res) => {
-  console.log(req.file);
-  const title = req.body.title;
-  const fileName = req.file.filename;
   try {
-    await PdfSchema.create({ title: title, pdf: fileName });
-    res.send({ status: "ok" });
+    const fileWord = req.file.filename;
+    process.env.FILENAME = fileWord;
+    res.send({ status: "OK" });
   } catch (error) {
     res.json({ status: error });
   }
 });
 
 app.listen(port, () => {
-    console.log('connecting with port ' + port)
+  console.log('connecting with port ' + port)
 })

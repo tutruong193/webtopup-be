@@ -136,7 +136,18 @@ const deleteUser = async (id) => {
         }
     })
 };
-
+const getUserName = async (id) => {
+    try {
+        const user = await User.findById(id);
+        if (user) {
+            return user.name;
+        } else {
+            return null;
+        }
+    } catch (error) {
+        throw error;
+    }
+};
 module.exports = {
     createUser,
     loginUser,
@@ -144,4 +155,5 @@ module.exports = {
     getAllUser,
     updateUser,
     deleteUser,
+    getUserName 
 }

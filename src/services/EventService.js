@@ -117,6 +117,18 @@ const detailEvent = async (id) => {
         }
     })
 }
+const getEventName = async (id) => {
+    try {
+        const event = await Event.findById(id);
+        if (event) {
+            return event.name;
+        } else {
+            return null;
+        }
+    } catch (error) {
+        throw error;
+    }
+};
 
 module.exports = {
     createEvent,
@@ -124,5 +136,6 @@ module.exports = {
     getValidEvents,
     updateEvent,
     deleteEvent,
-    detailEvent
+    detailEvent,
+    getEventName
 };
