@@ -148,6 +148,19 @@ const getUserName = async (id) => {
         throw error;
     }
 };
+
+const searchUser = async (query) => {
+    try {
+        const users = await User.find(query);
+        return {
+            status: 'OK',
+            message: 'SUCCESS',
+            data: users
+        };
+    } catch (error) {
+        throw error;
+    }
+};
 module.exports = {
     createUser,
     loginUser,
@@ -155,5 +168,6 @@ module.exports = {
     getAllUser,
     updateUser,
     deleteUser,
-    getUserName 
+    getUserName,
+    searchUser
 }

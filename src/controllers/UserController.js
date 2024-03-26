@@ -133,6 +133,18 @@ const logoutUser = async (req, res) => {
         })
     }
 }
+
+const searchUser = async (req, res) => {
+    try {
+        const query = req.query; // Lấy các tham số tìm kiếm từ query string
+        const response = await UserService.searchUser(query);
+        return res.status(200).json(response);
+    } catch (e) {
+        return res.status(404).json({
+            message: e
+        });
+    }
+};
 module.exports = {
     createUser,
     loginUser,
@@ -140,5 +152,6 @@ module.exports = {
     getAllUser,
     updateUser,
     deleteUser,
-    logoutUser
+    logoutUser,
+    searchUser
 }
