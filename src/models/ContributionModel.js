@@ -9,7 +9,9 @@ const contributionSchema = new mongoose.Schema({
     lastupdated_date: { type: Date, default: Date.now },
     eventId: { type: mongoose.Schema.Types.ObjectId, ref: 'Event', required: true },
     facultyId: { type: mongoose.Schema.Types.ObjectId, ref: 'Faculty', required: true },
-    status: { type: String, enum: ['Pending', 'Accepted', 'Rejected'], default: 'Pending' }
+    status: { type: String, enum: ['Pending', 'Accepted', 'Rejected'], default: 'Pending' },
+    score: {type: Number},
+    comment: [{type: String}]
 });
 
 const Contribution = mongoose.model('Contribution', contributionSchema);

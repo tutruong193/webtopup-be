@@ -15,6 +15,7 @@ const app = express()
 const port = process.env.PORT || 3001
 app.use(bodyParser.json());
 app.use(cors());
+app.use("/files", express.static("files"));
 routes(app);
 mongoose.connect(`${process.env.MONGO_DB}`)
   .then(() => {

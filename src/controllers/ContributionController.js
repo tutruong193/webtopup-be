@@ -106,10 +106,28 @@ const updateContribution = async (req, res) => {
         })
     }
 }
+const getContributionsByEventAndFaculty = async (req, res) => {
+    try {
+        const { eventId, facultyId } = req.params;
+        if (!eventId || !facultyId) {
+            return res.status(200).json({
+                status: 'ERR',
+                message: 'The eventId and facultyId is required'
+            })
+        }
+        const response = await ContributionService.getContributionsByEventAndFaculty(eventId, facultyId)
+        return res.status(200).json(response)
+    } catch (e) {
+        return res.status(404).json({
+            message: e
+        })
+    }
+}
 module.exports = {
     createContribution,
     getDetailContribution,
     getContributionSubmited,
     deleteContribution,
-    updateContribution
+    updateContribution,
+    getContributionsByEventAndFaculty
 };

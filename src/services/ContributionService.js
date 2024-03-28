@@ -1,5 +1,6 @@
 const Contribution = require("../models/ContributionModel");
-
+const Event = require("../models/EventModel");
+const Faculty = require("../models/FacultyModel");
 const createContribution = async (data) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -13,7 +14,9 @@ const createContribution = async (data) => {
                 lastupdated_date,
                 eventId,
                 facultyId,
-                status
+                status,
+                comment: [],
+                score: '',
             });
             await newContribution.save();
             resolve({
@@ -32,8 +35,8 @@ const getDetailContribution = async (contributionId) => {
             const contributionData = await Contribution.findOne({ eventId: contributionId }); // Chú ý sử dụng await để đợi lấy dữ liệu
             if (!contributionData) {
                 resolve({
-                    status: 'OK',
-                    message: 'SUCCESS',
+                    status: 'ERR',
+                    message: 'ko có',
                     data: null
                 });
             }
@@ -97,11 +100,39 @@ const updateContribution = async (id, data) => {
         }
     })
 };
-
+const getContributionsByEventAndFaculty = async (eventId, facultyId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const findEvent = await Event.findById(eventId);
+            if (!findEvent) {
+                resolve({
+                    status: 'ERR',
+                    message: 'ko có',
+                })
+            }
+            const findFaculty = await Faculty.findById(facultyId);
+            if (!findFaculty) {
+                resolve({
+                    status: 'ERR',
+                    message: 'ko có',
+                })
+            }
+            const data = await Contribution.find({ eventId: eventId, facultyId: facultyId }).exec()
+            resolve({
+                status: 'OK',
+                message: 'SUCCESS',
+                data: data
+            })
+        } catch (error) {
+            throw error;
+        }
+    })
+}
 module.exports = {
     createContribution,
     getDetailContribution,
     getContributionSubmited,
     deleteContribution,
-    updateContribution
+    updateContribution,
+    getContributionsByEventAndFaculty
 };
