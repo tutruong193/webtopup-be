@@ -10,7 +10,11 @@ const path = require('path');
 const app = express()
 const port = process.env.PORT || 3001
 app.use(bodyParser.json());
-app.use(cors());
+// Chỉ cho phép các nguồn gốc từ https://webtopup-fe.vercel.app
+app.use(cors({
+  origin: 'http://localhost:3000'
+}));
+
 app.use('/files', express.static(path.join(__dirname, 'files')));
 app.get("/getfiles/:id", async (req, res) => {
   try {
