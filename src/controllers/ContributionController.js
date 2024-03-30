@@ -27,7 +27,7 @@ const createContribution = async (req, res) => {
             facultyId,
             status,
             imageFiles: imageFiles,
-            wordFile: "/files/" + filename,
+            wordFile:  filename,
         });
         return res.status(200).json(response);
     } catch (error) {
@@ -36,6 +36,23 @@ const createContribution = async (req, res) => {
         });
     }
 };
+const getDetailContributionByEvent = async (req, res) => {
+    try {
+        const contributionId = req.params.id
+        if (!contributionId) {
+            return res.status(400).json({
+                status: 'ERR',
+                message: 'Incomplete input data',
+            });
+        }
+        const response = await ContributionService.getDetailContributionByEvent(contributionId)
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        });
+    }
+}
 const getDetailContribution = async (req, res) => {
     try {
         const contributionId = req.params.id
@@ -123,11 +140,23 @@ const getContributionsByEventAndFaculty = async (req, res) => {
         })
     }
 }
+const getAllContributions= async (req, res) => {
+    try {
+        const response = await ContributionService.getAllContributions()
+        return res.status(200).json(response)
+    } catch (e) {
+        return res.status(404).json({
+            message: e
+        })
+    }
+}
 module.exports = {
     createContribution,
-    getDetailContribution,
+    getDetailContributionByEvent,
     getContributionSubmited,
     deleteContribution,
     updateContribution,
-    getContributionsByEventAndFaculty
+    getContributionsByEventAndFaculty,
+    getAllContributions,
+    getDetailContribution
 };

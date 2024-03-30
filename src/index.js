@@ -5,17 +5,27 @@ const routes = require('./routes')
 const cors = require('cors');
 const bodyParser = require('body-parser')
 const multer = require("multer");
-const EventService = require('./services/EventService')
-const FacultyService = require('./services/FacultyService')
-const UserService = require('./services/UserService')
-const fs = require('fs');
 dotenv.config()
-
+const path = require('path');
 const app = express()
 const port = process.env.PORT || 3001
 app.use(bodyParser.json());
 app.use(cors());
-app.use("/files", express.static("files"));
+app.use('/files', express.static(path.join(__dirname, 'files')));
+app.get("/getfiles/:id", async (req, res) => {
+  try {
+    const fileWord = req.params.id;
+    const link = path.join(__dirname, 'files', fileWord);
+    console.log(link)
+    res.send({ 
+      status: "OK",
+      link: link
+    });
+    console.log(fileWord);
+  } catch (error) {
+    res.json({ status: error });
+  }
+});
 routes(app);
 mongoose.connect(`${process.env.MONGO_DB}`)
   .then(() => {

@@ -29,10 +29,32 @@ const createContribution = async (data) => {
         }
     });
 };
-const getDetailContribution = async (contributionId) => {
+const getDetailContributionByEvent = async (eventId) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const contributionData = await Contribution.findOne({ eventId: contributionId }); // Chú ý sử dụng await để đợi lấy dữ liệu
+            const contributionData = await Contribution.findOne({ eventId: eventId }); // Chú ý sử dụng await để đợi lấy dữ liệu
+            if (!contributionData) {
+                resolve({
+                    status: 'ERR',
+                    message: 'ko có',
+                    data: null
+                });
+            }
+            resolve({
+                status: 'OK',
+                message: 'SUCCESS',
+                data: contributionData
+            });
+        } catch (error) {
+            reject(error);
+            console.error(error);
+        }
+    })
+}
+const getDetailContribution = async (id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const contributionData = await Contribution.findOne({ _id: id }); // Chú ý sử dụng await để đợi lấy dữ liệu
             if (!contributionData) {
                 resolve({
                     status: 'ERR',
@@ -128,11 +150,27 @@ const getContributionsByEventAndFaculty = async (eventId, facultyId) => {
         }
     })
 }
+const getAllContributions = async () => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const data = await Contribution.find().exec()
+            resolve({
+                status: 'OK',
+                message: 'SUCCESS',
+                data: data
+            })
+        } catch (error) {
+            throw error;
+        }
+    })
+}
 module.exports = {
     createContribution,
-    getDetailContribution,
+    getDetailContributionByEvent,
     getContributionSubmited,
     deleteContribution,
     updateContribution,
-    getContributionsByEventAndFaculty
+    getContributionsByEventAndFaculty,
+    getAllContributions,
+    getDetailContribution
 };
