@@ -17,7 +17,7 @@ app.get("/getfiles/:id", async (req, res) => {
     const fileWord = req.params.id;
     const link = path.join(__dirname, 'files', fileWord);
     console.log(link)
-    res.send({ 
+    res.send({
       status: "OK",
       link: link
     });
@@ -34,10 +34,10 @@ mongoose.connect(`${process.env.MONGO_DB}`)
   .catch((e) => {
     console.log(e)
   })
+const uploadDestination = path.join(__dirname, 'files');
 const storage = multer.diskStorage({
   destination: async function (req, file, cb) {
-
-    cb(null, "./files");
+    cb(null,  uploadDestination);
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now();

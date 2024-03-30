@@ -4,6 +4,7 @@ const createContribution = async (req, res) => {
     try {
         const { studentId, title, submission_date, lastupdated_date, eventId, facultyId, status } = req.body;
         const filename = process.env.FILENAME
+        console.log(filename)
         if (!studentId || !title || !submission_date || !lastupdated_date || !eventId || !facultyId || !status) {
             return res.status(400).json({
                 status: 'ERR',
