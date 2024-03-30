@@ -27,7 +27,7 @@ const createContribution = async (req, res) => {
             facultyId,
             status,
             imageFiles: imageFiles,
-            wordFile:  filename,
+            wordFile: filename,
         });
         return res.status(200).json(response);
     } catch (error) {
@@ -140,7 +140,7 @@ const getContributionsByEventAndFaculty = async (req, res) => {
         })
     }
 }
-const getAllContributions= async (req, res) => {
+const getAllContributions = async (req, res) => {
     try {
         const response = await ContributionService.getAllContributions()
         return res.status(200).json(response)
