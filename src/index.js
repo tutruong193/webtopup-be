@@ -2,7 +2,6 @@ const express = require('express')
 const dotenv = require('dotenv')
 const mongoose = require('mongoose')
 const routes = require('./routes')
-const cors = require('cors');
 const bodyParser = require('body-parser')
 const multer = require("multer");
 dotenv.config()
@@ -10,7 +9,6 @@ const path = require('path');
 const app = express()
 const port = process.env.PORT || 3001
 app.use(bodyParser.json());
-app.use(cors());
 app.use('/files', express.static(path.join(__dirname, 'files')));
 app.get("/getfiles/:id", async (req, res) => {
   try {
@@ -37,7 +35,7 @@ mongoose.connect(`${process.env.MONGO_DB}`)
 const uploadDestination = path.join(__dirname, 'files');
 const storage = multer.diskStorage({
   destination: async function (req, file, cb) {
-    cb(null,  uploadDestination);
+    cb(null, uploadDestination);
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now();
