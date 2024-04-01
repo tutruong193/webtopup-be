@@ -21,7 +21,6 @@ const UserService = require("./services/UserService");
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(cors());
-
 app.get("/getfiles/:id", async (req, res) => {
   try {
     const fileWord = req.params.id;
@@ -111,6 +110,47 @@ app.get('/downloadZip/:id', async (req, res) => {
 
   } catch (error) {
     res.status(500).json({ status: "Error", message: "Failed to upload file" });
+  }
+});
+app.get('/downloadZips', async (req, res) => {
+  try {
+    const ids = req.query.selectedIds.split(',');
+    const archive = archiver('zip', {
+      zlib: { level: 9 }, // Highest compression level
+    });
+
+    // Pipe the output stream to the HTTP response
+    archive.pipe(res);
+
+    // Process each selectedId
+    for (const id of ids) {
+      const data = await Contribution.findById(id);
+      const wordName = data?.nameofworddb;
+      const faculty = await FacultyService.getNameFaculty(data.facultyId);
+      const student = await UserService.getUserName(data.studentId);
+
+      // Create a directory for facultyId
+      archive.directory(`src/files/${faculty}`, `zip/${faculty}`);
+
+      // Create a directory for studentId within the faculty directory
+      archive.directory(`src/files/${faculty}/${student}`, `zip/${faculty}/${student}`);
+
+      // Add the word file to the student directory
+      archive.file(`src/files/${wordName}`, { name: `zip/${faculty}/${student}/${wordName}` });
+
+      // Add image files to the student directory
+      for (let i = 0; i < data.imageFiles.length; i++) {
+        const base64Data = data.imageFiles[i];
+        const base64Image = base64Data.split(';base64,').pop();
+        const decodedImage = Buffer.from(base64Image, 'base64');
+        archive.append(decodedImage, { name: `zip/${faculty}/${student}/image_${i}.jpg` });
+      }
+    }
+    res.attachment('Files.zip');
+    archive.finalize();
+  } catch (error) {
+    // Handle errors by sending an appropriate response
+    res.status(500).json({ status: 'Error', message: 'Failed to create zip file' });
   }
 });
 

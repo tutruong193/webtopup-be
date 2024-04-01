@@ -89,18 +89,15 @@ const detailUser = async (id) => {
     })
 }
 
-const getAllUser = async (limit = 5, page = 0) => {
+const getAllUser = async () => {
     return new Promise(async (resolve, reject) => {
         try {
-        ///    const totalData = await User.length()
-            const data = await User.find().limit(limit).skip(page*limit)
+            ///    const totalData = await User.length()
+            const data = await User.find()
             resolve({
                 status: 'OK',
                 message: 'SUCCESS',
-                data: data,
-               // total: totalData,
-                pageCurrent: page + 1,
-                //totalPage: Math.ceil(totalData/limit)
+                data: data
             })
         } catch (error) {
             throw error;
