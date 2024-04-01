@@ -4,12 +4,11 @@ const Faculty = require("../models/FacultyModel");
 const createContribution = async (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const { studentId, title, wordFile, submission_date, lastupdated_date, eventId, facultyId, status, imageFiles } = data;
+            const { studentId, title, nameofworddb, submission_date, lastupdated_date, eventId, facultyId, status, imageFiles, content, nameofword } = data;
             const newContribution = new Contribution({
                 studentId,
                 title,
-                wordFile,
-                imageFiles, // Thêm thông tin về tệp vào bản ghi
+                imageFiles,
                 submission_date,
                 lastupdated_date,
                 eventId,
@@ -17,11 +16,18 @@ const createContribution = async (data) => {
                 status,
                 comment: [],
                 score: '',
+                content,
+                nameofword,
+                nameofworddb
             });
-            await newContribution.save();
+
+            // Lưu Contribution
+            const savedContribution = await newContribution.save();
+
             resolve({
                 status: 'OK',
-                message: 'SUCCESS'
+                message: 'SUCCESS',
+                data: savedContribution
             });
         } catch (error) {
             reject(error);
@@ -29,10 +35,11 @@ const createContribution = async (data) => {
         }
     });
 };
+
 const getDetailContributionByEvent = async (eventId) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const contributionData = await Contribution.findOne({ eventId: eventId }); // Chú ý sử dụng await để đợi lấy dữ liệu
+            const contributionData = await Contribution.findOne({ eventId: eventId }).populate('wordFile').exec();; // Chú ý sử dụng await để đợi lấy dữ liệu
             if (!contributionData) {
                 resolve({
                     status: 'ERR',

@@ -2,33 +2,27 @@ const ContributionService = require('../services/ContributionService');
 
 const createContribution = async (req, res) => {
     try {
-        const { studentId, title, submission_date, lastupdated_date, eventId, facultyId, status } = req.body;
-        const filename = process.env.FILENAME
-        console.log(filename)
-        if (!studentId || !title || !submission_date || !lastupdated_date || !eventId || !facultyId || !status) {
+        const { studentId, title, submission_date, lastupdated_date, eventId, facultyId, status, content, nameofword, imageFiles } = req.body;
+        if (!studentId || !title || !submission_date || !lastupdated_date || !eventId || !facultyId || !status || !content || !nameofword) {
             return res.status(400).json({
                 status: 'ERR',
                 message: 'Incomplete input data',
             });
         }
-        let imageFiles = [];
-        for (let i = 0; i < 3; i++) {
-            const imageKey = `image_${i}`;
-            if (req.body[imageKey] !== null && req.body[imageKey] !== undefined) {
-                imageFiles.push(req.body[imageKey]);
-            }
-        }
-
+        console.log(process.env.FILENAME)
+        const nameofworddb = process.env.FILENAME
         const response = await ContributionService.createContribution({
             studentId,
+            content,
+            nameofword,
             title,
             submission_date,
             lastupdated_date,
             eventId,
             facultyId,
             status,
-            imageFiles: imageFiles,
-            wordFile: filename,
+            imageFiles,
+            nameofworddb
         });
         return res.status(200).json(response);
     } catch (error) {
