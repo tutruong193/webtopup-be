@@ -36,28 +36,6 @@ const createContribution = async (data) => {
     });
 };
 
-const getDetailContributionByEvent = async (eventId) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            const contributionData = await Contribution.findOne({ eventId: eventId }).populate('wordFile').exec();; // Chú ý sử dụng await để đợi lấy dữ liệu
-            if (!contributionData) {
-                resolve({
-                    status: 'ERR',
-                    message: 'ko có',
-                    data: null
-                });
-            }
-            resolve({
-                status: 'OK',
-                message: 'SUCCESS',
-                data: contributionData
-            });
-        } catch (error) {
-            reject(error);
-            console.error(error);
-        }
-    })
-}
 const getDetailContribution = async (id) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -129,34 +107,6 @@ const updateContribution = async (id, data) => {
         }
     })
 };
-const getContributionsByEventAndFaculty = async (eventId, facultyId) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            const findEvent = await Event.findById(eventId);
-            if (!findEvent) {
-                resolve({
-                    status: 'ERR',
-                    message: 'ko có',
-                })
-            }
-            const findFaculty = await Faculty.findById(facultyId);
-            if (!findFaculty) {
-                resolve({
-                    status: 'ERR',
-                    message: 'ko có',
-                })
-            }
-            const data = await Contribution.find({ eventId: eventId, facultyId: facultyId }).exec()
-            resolve({
-                status: 'OK',
-                message: 'SUCCESS',
-                data: data
-            })
-        } catch (error) {
-            throw error;
-        }
-    })
-}
 const getAllContributions = async () => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -173,11 +123,9 @@ const getAllContributions = async () => {
 }
 module.exports = {
     createContribution,
-    getDetailContributionByEvent,
     getContributionSubmited,
     deleteContribution,
     updateContribution,
-    getContributionsByEventAndFaculty,
     getAllContributions,
     getDetailContribution
 };

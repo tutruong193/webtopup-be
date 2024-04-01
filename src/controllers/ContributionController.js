@@ -31,23 +31,6 @@ const createContribution = async (req, res) => {
         });
     }
 };
-const getDetailContributionByEvent = async (req, res) => {
-    try {
-        const contributionId = req.params.id
-        if (!contributionId) {
-            return res.status(400).json({
-                status: 'ERR',
-                message: 'Incomplete input data',
-            });
-        }
-        const response = await ContributionService.getDetailContributionByEvent(contributionId)
-        return res.status(200).json(response)
-    } catch (error) {
-        return res.status(500).json({
-            message: error.message
-        });
-    }
-}
 const getDetailContribution = async (req, res) => {
     try {
         const contributionId = req.params.id
@@ -118,23 +101,6 @@ const updateContribution = async (req, res) => {
         })
     }
 }
-const getContributionsByEventAndFaculty = async (req, res) => {
-    try {
-        const { eventId, facultyId } = req.params;
-        if (!eventId || !facultyId) {
-            return res.status(200).json({
-                status: 'ERR',
-                message: 'The eventId and facultyId is required'
-            })
-        }
-        const response = await ContributionService.getContributionsByEventAndFaculty(eventId, facultyId)
-        return res.status(200).json(response)
-    } catch (e) {
-        return res.status(404).json({
-            message: e
-        })
-    }
-}
 const getAllContributions = async (req, res) => {
     try {
         const response = await ContributionService.getAllContributions()
@@ -147,11 +113,9 @@ const getAllContributions = async (req, res) => {
 }
 module.exports = {
     createContribution,
-    getDetailContributionByEvent,
     getContributionSubmited,
     deleteContribution,
     updateContribution,
-    getContributionsByEventAndFaculty,
     getAllContributions,
     getDetailContribution
 };

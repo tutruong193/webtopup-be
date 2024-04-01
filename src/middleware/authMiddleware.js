@@ -82,6 +82,5 @@ module.exports = {
     authAdminMiddleWare,
     authMarketingManagerMiddleWare,
     authMarketingMiddleWare,
-    authStudentMiddleWare
-
+    authStudentMiddleWare,
 }

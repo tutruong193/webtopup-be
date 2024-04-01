@@ -85,8 +85,6 @@ app.get('/downloadZip/:id', async (req, res) => {
       const wordName = data?.nameofworddb;
       const faculty = await FacultyService.getNameFaculty(data.facultyId);
       const student = await UserService.getUserName(data.studentId);
-      const eventId = data.eventId;
-      const zipFileName = `${eventId}.zip`;
       const archive = archiver('zip', {
         zlib: { level: 9 } // Mức độ nén cao nhất
       });
@@ -103,7 +101,7 @@ app.get('/downloadZip/:id', async (req, res) => {
         const decodedImage = Buffer.from(base64Image, 'base64');
         archive.append(decodedImage, { name: `${faculty}/${student}/image_${i}.jpg` });
       }
-      res.attachment(zipFileName);
+      res.attachment('File.zip');
       // Đợi cho tất cả các dữ liệu được thêm vào archive hoàn tất trước khi kết thúc response
       archive.finalize();
     } else { res.status(500).json({ status: "Error", message: "Contribution doest exist" }); }
@@ -118,26 +116,20 @@ app.get('/downloadZips', async (req, res) => {
     const archive = archiver('zip', {
       zlib: { level: 9 }, // Highest compression level
     });
-
     // Pipe the output stream to the HTTP response
     archive.pipe(res);
-
     // Process each selectedId
     for (const id of ids) {
       const data = await Contribution.findById(id);
       const wordName = data?.nameofworddb;
       const faculty = await FacultyService.getNameFaculty(data.facultyId);
       const student = await UserService.getUserName(data.studentId);
-
       // Create a directory for facultyId
       archive.directory(`src/files/${faculty}`, `zip/${faculty}`);
-
       // Create a directory for studentId within the faculty directory
       archive.directory(`src/files/${faculty}/${student}`, `zip/${faculty}/${student}`);
-
       // Add the word file to the student directory
       archive.file(`src/files/${wordName}`, { name: `zip/${faculty}/${student}/${wordName}` });
-
       // Add image files to the student directory
       for (let i = 0; i < data.imageFiles.length; i++) {
         const base64Data = data.imageFiles[i];

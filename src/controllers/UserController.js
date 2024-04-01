@@ -1,5 +1,4 @@
 const UserService = require('../services/UserService');
-
 const createUser = async (req, res) => {
     try {
         const { name, email, password, role, faculty } = req.body
@@ -28,6 +27,45 @@ const createUser = async (req, res) => {
         })
     }
 }
+const sendActivationCode = async (req, res) => {
+    try {
+        const id = req.params.id;
+        if (!id) {
+            return res.status(404).json({
+                status: 'ERR',
+                message: 'Id is required'
+            });
+        }
+        await UserService.sendActivationCode(id);
+        return res.status(200).json({
+            status: 'OK',
+            message: 'Activation code sent successfully'
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        });
+    }
+};
+
+const verifyActivationCode = async (req, res) => {
+    try {
+        const { code } = req.body;
+        const id = req.params.id;
+        if(!code || !id) {
+            return res.status(404).json({
+                status: 'ERR',
+                message: 'Id and code is required'
+            });
+        }
+        const result = await UserService.verifyActivationCode(id, code);
+        return res.status(200).json(result);
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        });
+    }
+};
 
 const loginUser = async (req, res) => {
     try {
@@ -152,5 +190,7 @@ module.exports = {
     updateUser,
     deleteUser,
     logoutUser,
-    searchUser
+    searchUser,
+    verifyActivationCode,
+    sendActivationCode
 }

@@ -43,7 +43,6 @@ const loginUser = (data) => {
                     message: 'The user is not defined',
                 })
             }
-
             if (password !== checkUser.password) {
                 resolve({
                     status: 'ERR',
@@ -55,6 +54,13 @@ const loginUser = (data) => {
                 role: checkUser.role,
                 faculty: checkUser.faculty
             })
+            if (!checkUser.isActive) {
+                resolve({
+                    status: 'ERR',
+                    message: 'Not activated yet',
+                    data: checkUser,
+                })
+            }
             resolve({
                 status: 'OK',
                 message: 'SUCCESS',
@@ -158,6 +164,65 @@ const searchUser = async (query) => {
         throw error;
     }
 };
+const sendActivationCode = async (id) => {
+    return new Promise(async (resolve, reject) => {
+        const user = await User.findById(id);
+        if (!user) {
+            resolve({
+                status: 'ERR',
+                message: 'User not found',
+            })
+        }
+        const activationCode = Math.floor(100000 + Math.random() * 900000);
+        process.env.ACTIVECODE = activationCode
+        // Gửi tin nhắn chứa mã kích hoạt qua Twilio hoặc dịch vụ SMS khác
+        const accountSid = process.env.ACCOUNTSID;
+        const authToken = process.env.AUTHTOKEN;
+        const client = require('twilio')(accountSid, authToken);
+        client.messages
+            .create({
+                body: `Your activation code: ${activationCode}`,
+                from: process.env.AUTHPHONE,
+                to: '+84354676215'
+            })
+            .catch(err => console.log(err));
+        resolve({
+            status: 'OK',
+            message: 'Code is sended',
+        })
+    })
+};
+const verifyActivationCode = async (userId, code) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            console.log(userId, code)
+            const user = await User.findById(userId);
+            if (!user) {
+                resolve({
+                    status: 'ERR',
+                    message: 'user not found',
+                })
+            }
+            if (process.env.ACTIVECODE !== code) {
+                resolve({
+                    status: 'ERR',
+                    message: 'Code not correct',
+                })
+            } else {
+                user.isActive = true;
+                process.env.ACTIVECODE = '';
+                await user.save();
+                resolve({
+                    status: 'OK',
+                    message: 'Actived',
+                })
+            }
+        } catch (error) {
+            throw error;
+        }
+    })
+};
+
 module.exports = {
     createUser,
     loginUser,
@@ -166,5 +231,7 @@ module.exports = {
     updateUser,
     deleteUser,
     getUserName,
-    searchUser
+    searchUser,
+    sendActivationCode,
+    verifyActivationCode
 }
