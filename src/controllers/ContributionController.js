@@ -114,6 +114,7 @@ const updateContribution = async (req, res) => {
   try {
     const id = req.params.id;
     const data = req.body;
+    console.log(id,data)
     if (!id) {
       return res.status(200).json({
         status: "ERR",
@@ -138,6 +139,30 @@ const getAllContributions = async (req, res) => {
     });
   }
 };
+const updateCommentContribution = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const {comment} = req.body
+    if (!id) {
+      return res.status(200).json({
+        status: "ERR",
+        message: "The ContributionID is required",
+      });
+    }
+    if (!comment) {
+      return res.status(200).json({
+        status: "ERR",
+        message: "The comment is required",
+      });
+    }
+    const response = await ContributionService.updateCommentContribution(id, comment);
+    return res.status(200).json(response);
+  } catch (e) {
+    return res.status(404).json({
+      message: e,
+    });
+  }
+};
 module.exports = {
   createContribution,
   getContributionSubmited,
@@ -145,4 +170,5 @@ module.exports = {
   updateContribution,
   getAllContributions,
   getDetailContribution,
+  updateCommentContribution,
 };

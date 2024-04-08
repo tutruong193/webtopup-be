@@ -98,7 +98,6 @@ const detailUser = async (id) => {
 const getAllUser = async () => {
     return new Promise(async (resolve, reject) => {
         try {
-            ///    const totalData = await User.length()
             const data = await User.find()
             resolve({
                 status: 'OK',
