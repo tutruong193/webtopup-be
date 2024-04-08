@@ -8,7 +8,7 @@ const createFaculty = async (req, res) => {
                 message: 'The faculty name is required.'
             })
         } else {
-            const response = await FacultyService.createFaculty(req.body)
+            const response = await FacultyService.createFaculty(name)
             return res.status(200).json(response)
         }
     } catch (e) {
@@ -55,9 +55,28 @@ const getNameFaculty = async (req, res) => {
         });
     }
 };
+const updateFaculty = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const {name} = req.body
+        if(!id){
+            return res.status(400).json({
+                status: 'ERR',
+                message: 'The faculty id is required.'
+            });
+        }
+        const response = await FacultyService.updateFaculty(id,name);
+        return res.status(200).json(response);
+    } catch (e) {
+        return res.status(404).json({
+            message: e.message // Trả về thông báo lỗi cụ thể
+        });
+    }
+};
 module.exports = {
     createFaculty,
     deleteFaculty,
     getAllFaculty,
-    getNameFaculty
+    getNameFaculty,
+    updateFaculty
 }
