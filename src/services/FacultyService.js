@@ -11,8 +11,8 @@ const createFaculty = (newFaculty) => {
         });
       } else {
         // Khoa chưa tồn tại, tạo mới
-        const res = new Faculty({ name: newFaculty})
-        res.save()
+        const res = new Faculty({ name: newFaculty });
+        res.save();
         resolve({
           status: "OK",
           message: "SUCCESS",

@@ -11,7 +11,7 @@ const fs = require("fs");
 const path = require("path");
 const { promisify } = require("util");
 const writeFileAsync = promisify(fs.writeFile);
-
+const Docxtemplater = require("docxtemplater");
 const archiver = require("archiver");
 const app = express();
 const port = process.env.PORT || 3001;
@@ -25,12 +25,10 @@ app.get("/getfiles/:id", async (req, res) => {
   try {
     const fileWord = req.params.id;
     const link = path.join(__dirname, "files", fileWord);
-    console.log(link);
     res.send({
       status: "OK",
       link: link,
     });
-    console.log(fileWord);
   } catch (error) {
     res.json({ status: error });
   }
@@ -51,7 +49,6 @@ const storage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now();
-    console.log(file.fieldname);
     cb(null, uniqueSuffix + file.originalname);
   },
 });
@@ -63,7 +60,6 @@ app.post("/upload-files", upload.single("file"), async (req, res) => {
   try {
     // Đường dẫn tệp tải lên
     const filePath = req.file.path;
-    console.log(filePath);
     process.env.FILENAME = req.file.filename;
     // Sử dụng Mammoth để chuyển đổi tệp Word thành HTML
     mammoth
@@ -176,11 +172,6 @@ app.get("/downloadZips", async (req, res) => {
         downloadTriggered = true;
 
         res.download("Files.zip", () => {
-          // Delete the ZIP file after it's downloaded
-          // fs.unlink('Files.zip', (err) => {
-          //   if (err) throw err;
-          //   console.log('ZIP file deleted');
-          // });
         });
       }
     });

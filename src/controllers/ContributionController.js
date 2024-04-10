@@ -30,7 +30,6 @@ const createContribution = async (req, res) => {
         message: "Incomplete input data",
       });
     }
-    console.log(process.env.FILENAME);
     const nameofworddb = process.env.FILENAME;
     const response = await ContributionService.createContribution({
       studentId,
@@ -93,7 +92,6 @@ const getContributionSubmited = async (req, res) => {
 const deleteContribution = async (req, res) => {
   try {
     const contributionId = req.params.id;
-    console.log(contributionId);
     if (!contributionId) {
       return res.status(400).json({
         status: "ERR",
@@ -114,7 +112,6 @@ const updateContribution = async (req, res) => {
   try {
     const id = req.params.id;
     const data = req.body;
-    console.log(id,data)
     if (!id) {
       return res.status(200).json({
         status: "ERR",
@@ -142,7 +139,7 @@ const getAllContributions = async (req, res) => {
 const updateCommentContribution = async (req, res) => {
   try {
     const id = req.params.id;
-    const {comment} = req.body
+    const { comment } = req.body;
     if (!id) {
       return res.status(200).json({
         status: "ERR",
@@ -155,7 +152,10 @@ const updateCommentContribution = async (req, res) => {
         message: "The comment is required",
       });
     }
-    const response = await ContributionService.updateCommentContribution(id, comment);
+    const response = await ContributionService.updateCommentContribution(
+      id,
+      comment
+    );
     return res.status(200).json(response);
   } catch (e) {
     return res.status(404).json({
